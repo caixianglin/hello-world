@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <title>html5 单图片上传预览</title>
+    <style>
+        #preview {
+            width: 300px;
+            height: 300px;
+            overflow: hidden;
+        }
+        #preview img {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+    <script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+    <script type="text/javascript">
+        function preview1(file) {
+            var img = new Image(), url = img.src = URL.createObjectURL(file)
+            var $img = $(img)
+            img.onload = function() {
+                URL.revokeObjectURL(url)
+                $('#preview').empty().append($img)
+            }
+        }
+        function preview2(file) {
+            var reader = new FileReader()
+            reader.onload = function(e) {
+                var $img = $('<img>').attr("src", e.target.result)
+                $('#preview').empty().append($img)
+            }
+            reader.readAsDataURL(file)
+        }
+         
+        $(function() {
+            $('[type=file]').change(function(e) {
+                var file = e.target.files[0];
+                preview2(file);
+            })
+        })
+    </script>
+</head>
+<body>
+<p>在项目中遇到用input标签file类型的文件上传，想实在上传之前进行图片的预览功能；之前的做的一个解决方案是文件先上传上去然后返回地址再显示在页面上，这样就不太好，因为用户基本信息可能并没有保存，但是头像却已经改变，如果在需要改变就导致了多余图片的保存服务器</p>
+<form enctype="multipart/form-data" action="#" method="post">
+    <input type="file" name="imageUpload"/>
+    <div id="preview" style="width: 300px;height:300px;border:1px solid gray;"></div>
+</form>
+</body>
+</html>
